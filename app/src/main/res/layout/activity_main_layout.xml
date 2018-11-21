@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:layout_gravity="bottom"
+    android:layout_marginTop="10dp"
+    android:background="#FFFFFF00"
+    tools:context="com.hongri.lottie.MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="top"
+        android:src="@drawable/ic_launcher_background"/>
+
+    <LinearLayout
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
+        android:background="#FFCCCCCC"
+        android:layout_gravity="center"
+        >
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:background="#FF0000FF"
+            android:gravity="right"
+            android:text="哈"
+            android:textColor="#FF00FF00"/>
+
+    </LinearLayout>
+</FrameLayout>

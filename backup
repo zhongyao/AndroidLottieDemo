@@ -1,0 +1,73 @@
+/*setContentView(R.layout.activity_main);
+
+
+        findViewById(R.id.btnRefresh).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,RefreshActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        FrameLayout frameLayout = new FrameLayout(this);
+        FrameLayout.LayoutParams frameLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,800);
+        frameLayoutParams.gravity = Gravity.BOTTOM;
+        frameLayoutParams.topMargin = 40;
+
+        frameLayout.setLayoutParams(frameLayoutParams);
+        frameLayout.setBackgroundColor(Color.YELLOW);
+
+
+        final CustomImageView imageView = new CustomImageView(this);
+        FrameLayout.LayoutParams imageParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,400);
+        imageParams.gravity = Gravity.BOTTOM;
+
+        imageView.setLayoutParams(imageParams);
+        imageView.setImageResource(R.drawable.ic_launcher_background);
+
+        LinearLayout textLaout = new LinearLayout(this);
+        FrameLayout.LayoutParams textLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,700);
+        textLayoutParams.gravity = Gravity.CENTER;
+        textLayoutParams.bottomMargin = 40;
+
+        textLaout.setLayoutParams(textLayoutParams);
+
+        textLaout.setBackgroundColor(Color.LTGRAY);
+
+
+        TextView textView = new TextView(this);
+        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,400);
+        textParams.gravity = Gravity.CENTER;
+        textParams.topMargin = 30;
+        textParams.leftMargin = 30;
+
+        //GradientDrawable drawable = new GradientDrawable();
+        //drawable.setShape(GradientDrawable.RECTANGLE);
+        //drawable.setCornerRadius(50);
+        //drawable.setColor(Color.GREEN);
+
+        textView.setLayoutParams(textParams);
+        textView.setBackgroundResource(R.drawable.shape);
+        textView.setText("哈");
+        textView.setTextColor(Color.RED);
+        textView.setGravity(Gravity.RIGHT);
+
+
+        textLaout.addView(textView);
+
+        frameLayout.addView(imageView);
+        frameLayout.addView(textLaout);
+
+        //final CustomImageView customImageView = new CustomImageView(this);
+        imageView.setText(textView);
+
+        textLaout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageView.requestLayout();
+                imageView.invalidate();
+            }
+        });*/
+
+
+        //setContentView(frameLayout);

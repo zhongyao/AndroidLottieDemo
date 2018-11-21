@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">AndroidLottieDemo</string>
+    <string name="pulldown_refresh">下拉刷新</string>
+    <string name="load_more">加载更多</string>
+
+</resources>
