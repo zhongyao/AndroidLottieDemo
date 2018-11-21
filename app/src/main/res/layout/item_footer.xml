@@ -3,12 +3,16 @@
               android:layout_width="match_parent"
               android:layout_height="100dp"
               android:background="@color/colorAccent"
-              android:orientation="vertical">
-
+              android:orientation="horizontal">
+<!--
+1、当orientation为vertical时，子控件设置left right center_horizontal center才有效
+2、当orientation为horizontal时，子控件设置top bottom center_vertical center才有效-->
     <TextView
         android:id="@+id/tv_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"/>
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="15sp"/>
 
 </LinearLayout>
