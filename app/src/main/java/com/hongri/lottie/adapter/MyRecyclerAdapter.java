@@ -1,17 +1,13 @@
 package com.hongri.lottie.adapter;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.hongri.lottie.R;
 import com.hongri.lottie.holder.FooterHolder;
 import com.hongri.lottie.holder.HeaderHolder;
-import com.hongri.lottie.holder.NormalHolder;
 
 /**
  * @author zhongyao
@@ -20,8 +16,6 @@ import com.hongri.lottie.holder.NormalHolder;
 
 public class MyRecyclerAdapter extends RecyclerView.Adapter {
     private Context mContext;
-    private ArrayList<String> mData;
-    private LayoutInflater mInflater;
     private final int mHeaderSize = 1;
     private final int mFooterSize = 1;
 
@@ -29,28 +23,28 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter {
     private final int FOOTER_TYPE = 2;
     private final int NORMAL_TYPE = 3;
 
+    private NormalAdapter mNormalAdapter;
     private View mHeaderView;
     private View mFooterView;
 
-    public MyRecyclerAdapter(Context context, ArrayList<String> data, View headerView, View footerView) {
+    public MyRecyclerAdapter(Context context, NormalAdapter normalAdapter, View headerView,
+                             View footerView) {
         mContext = context;
-        mData = data;
+        mNormalAdapter = normalAdapter;
         mHeaderView = headerView;
         mFooterView = footerView;
-        mInflater = LayoutInflater.from(mContext);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ViewHolder mHolder = null;
-        View view;
+        ViewHolder mHolder;
         if (viewType == HEADER_TYPE) {
             mHolder = new HeaderHolder(mHeaderView);
         } else if (viewType == FOOTER_TYPE) {
             mHolder = new FooterHolder(mFooterView);
         } else {
-            view = mInflater.inflate(R.layout.activity_refresh_item, parent, false);
-            mHolder = new NormalHolder(view);
+            mHolder = mNormalAdapter.onCreateViewHolder(parent, viewType);
+
         }
         return mHolder;
     }
@@ -62,7 +56,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter {
         } else if (position == getItemCount() - 1) {
             ((FooterHolder)holder).tvFooter.setText(R.string.load_more);
         } else {
-            ((NormalHolder)holder).tv.setText(mData.get(position - 1));
+            mNormalAdapter.onBindViewHolder(holder, position - 1);
         }
     }
 
@@ -82,6 +76,6 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return mData.size() + mHeaderSize + mFooterSize;
+        return mNormalAdapter.getItemCount() + mHeaderSize + mFooterSize;
     }
 }
