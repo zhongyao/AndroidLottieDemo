@@ -34,15 +34,15 @@ public class XRecyclerView extends RecyclerView {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
         Logger.d("onLayout");
-        //if (isFirstComeIn) {
-        //    mHeaderMeasureHeight = mHeaderView.getMeasuredHeight();
-        //    mHeaderView.setTop(-mHeaderMeasureHeight);
-        //    LayoutParams params = (LayoutParams)mHeaderView.getLayoutParams();
-        //    params.setMargins(params.leftMargin, -mHeaderMeasureHeight, params.rightMargin,
-        //        params.bottomMargin);
-        //    mHeaderView.setLayoutParams(params);
-        //    isFirstComeIn = false;
-        //}
+        if (isFirstComeIn) {
+            mHeaderMeasureHeight = mHeaderView.getMeasuredHeight();
+            //mHeaderView.setTop(-mHeaderMeasureHeight/2);
+            LayoutParams params = (LayoutParams)mHeaderView.getLayoutParams();
+            params.setMargins(params.leftMargin, -mHeaderMeasureHeight, params.rightMargin,
+                params.bottomMargin);
+            mHeaderView.setLayoutParams(params);
+            isFirstComeIn = false;
+        }
     }
 
     @Override
