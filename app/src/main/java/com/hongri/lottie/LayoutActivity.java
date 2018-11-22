@@ -13,16 +13,18 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.hongri.lottie.util.DataUtil;
+import com.hongri.lottie.widget.BottomRelativeLayout;
 
 /**
  * @author hongri
  */
 public class LayoutActivity extends AppCompatActivity {
-    private final int TOTAL_HEIGHT = 116;
+    private final int TOTAL_HEIGHT = 116 * 4;
     private final int IMAGE_SIZE = 24;
     private final int IMAGE_BOTTOM_MARGIN = 10;
     private final int TEXT_LAYOUT_BOTTOM_MARGIN = 5;
     private final int TEXT_BOTTOM_MARGIN = 5;
+    private final int BOTTOM_LAYOUT_HEIGHT = 116;
 
     private final int TEXT_LAYOUT_HEIGHT = 116;
     private final int TEXT_HEIGHT = 24;
@@ -44,6 +46,31 @@ public class LayoutActivity extends AppCompatActivity {
         frameLayout.setBackgroundColor(Color.YELLOW);
 
         /**
+         * 自定义LinearLayout布局
+         */
+        //BottomLinearLayout bottomLayout = new BottomLinearLayout(this);
+        //FrameLayout.LayoutParams bottomLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        //    DataUtil.getDimen(this, DataUtil.getDimen(this,BOTTOM_LAYOUT_HEIGHT)));
+        //bottomLayoutParams.gravity = Gravity.TOP;
+        //bottomLayout.setLayoutParams(bottomLayoutParams);
+        ////bottomLayout.setBackgroundColor(Color.BLUE);
+        //
+        //bottomLayout.addSubView();
+
+        /**
+         * 自定义RelativeLayout布局
+         */
+        BottomRelativeLayout bottomRelativeLayout = new BottomRelativeLayout(this);
+        FrameLayout.LayoutParams bottomRelativeParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            DataUtil.getDimen(this, DataUtil.getDimen(this,BOTTOM_LAYOUT_HEIGHT)));
+        bottomRelativeParams.gravity = Gravity.TOP;
+        bottomRelativeLayout.setLayoutParams(bottomRelativeParams);
+        bottomRelativeLayout.setBackgroundColor(Color.BLUE);
+
+        bottomRelativeLayout.addRelativeSubLayout();
+
+
+        /**
          * 图片
          */
         final CustomImageView imageView = new CustomImageView(this);
@@ -59,11 +86,11 @@ public class LayoutActivity extends AppCompatActivity {
          */
         LinearLayout textLaout = new LinearLayout(this);
         FrameLayout.LayoutParams textLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-            LayoutParams.MATCH_PARENT);
+            DataUtil.getDimen(this, TOTAL_HEIGHT/2));
         textLayoutParams.gravity = Gravity.BOTTOM;
         textLayoutParams.bottomMargin = DataUtil.getDimen(this, TEXT_LAYOUT_BOTTOM_MARGIN);
 
-        textLaout.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
+        textLaout.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
         textLaout.setLayoutParams(textLayoutParams);
 
         textLaout.setBackgroundColor(Color.GRAY);
@@ -90,6 +117,7 @@ public class LayoutActivity extends AppCompatActivity {
 
         textLaout.addView(textView);
 
+        frameLayout.addView(bottomRelativeLayout);
         frameLayout.addView(imageView);
         frameLayout.addView(textLaout);
 
