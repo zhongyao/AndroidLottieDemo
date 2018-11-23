@@ -1,26 +1,15 @@
 package com.hongri.lottie;
 
-import android.animation.ValueAnimator;
-import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.graphics.Color;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffColorFilter;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import com.airbnb.lottie.Cancellable;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import com.airbnb.lottie.LottieAnimationView;
-import com.airbnb.lottie.LottieComposition;
-import com.airbnb.lottie.OnCompositionLoadedListener;
-import com.hongri.lottie.util.DataUtil;
-import com.hongri.lottie.util.Logger;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.hongri.lottie.widget.ProgressImageView;
 
 /**
  * @author hongri
@@ -28,7 +17,7 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
 
     private static final String PULLDOWN_LOTTIE_JSON = "pulldown_data_new.json";
-    private static final String ROLLING_LOTTIE_JSON = "rolling_data_new.json";
+    public static final String ROLLING_LOTTIE_JSON = "rolling_data_new_new.json";
     private static final String LOGO_LOTTIE_JSON = "LogoSmall.json";
     private LottieAnimationView animationView;
     private LottieAnimationView animationView2;
@@ -40,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        /*setContentView(R.layout.activity_main);
 
         animationView = (LottieAnimationView)findViewById(R.id.animation_view);
         animationView2 = (LottieAnimationView)findViewById(R.id.animation_view2);
@@ -48,10 +37,10 @@ public class MainActivity extends AppCompatActivity {
         animationView4 = (LottieAnimationView)findViewById(R.id.animation_view4);
         animationView5 = (LottieAnimationView)findViewById(R.id.animation_view5);
 
-        /**
+        *//**
          * 示例1:
          * Lottie可以通过ValueAnimator动态的设置动画值从0.0f到1.0f来实现动画的变化
-         */
+         *//*
         animationView.setAnimation(PULLDOWN_LOTTIE_JSON);
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 1.0f).setDuration(5000);
         animator.addUpdateListener(new AnimatorUpdateListener() {
@@ -65,10 +54,10 @@ public class MainActivity extends AppCompatActivity {
 
         animator.start();
 
-        /**
+        *//**
          * 示例2:
          * Lottie可以ValueAnimator动态的设置动画，且当value值达到1.0时开始切换到另一个动画，并循环播放
-         */
+         *//*
 
         animationView2.setAnimation(PULLDOWN_LOTTIE_JSON);
         ValueAnimator animator2 = ValueAnimator.ofFloat(0f, 1.0f).setDuration(5000);
@@ -88,10 +77,10 @@ public class MainActivity extends AppCompatActivity {
 
         animator2.start();
 
-        /**
+        *//**
          * 示例3：
          * 通过网络获取Json后加载(本地模拟)
-         */
+         *//*
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(DataUtil.getLottieStringData());
@@ -116,10 +105,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /**
+        *//**
          * 示例4：
          * 监听Lottie动画的进度
-         */
+         *//*
         animationView4.setAnimation(LOGO_LOTTIE_JSON);
         animationView4.loop(true);
         animationView4.playAnimation();
@@ -130,10 +119,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /**
+        *//**
          * 示例5：
          * 添加颜色过滤器（包含整个动画、一个特定图层、图层上的特定内容）
-         */
+         *//*
         animationView5.setAnimation(ROLLING_LOTTIE_JSON);
         animationView5.loop(true);
 
@@ -141,7 +130,21 @@ public class MainActivity extends AppCompatActivity {
         final PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(Color.RED, Mode.LIGHTEN);
         //在整个视图中添加一个颜色过滤器
         animationView5.addColorFilter(colorFilter);
-        animationView5.playAnimation();
+        animationView5.playAnimation();*/
 
+        /**
+         * 示例6：
+         * 通过布局动态添加View
+         */
+        LinearLayout.LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,400);
+        ProgressImageView progressImageView = new ProgressImageView(this);
+        progressImageView.setLayoutParams(layoutParams);
+        progressImageView.setBackgroundColor(Color.YELLOW);
+        //progressImageView.setImageResource(R.drawable.shape);
+        progressImageView.startDraw();
+        progressImageView.startAnim();
+
+        //progressImageView.invalidate();
+        setContentView(progressImageView);
     }
 }
