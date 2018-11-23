@@ -60,7 +60,7 @@ public class XRecyclerView extends RecyclerView {
     }
 
     private void updateHeaderMargin(int marginTop) {
-        //mHeaderView.setTop(-mHeaderMeasureHeight/2);
+        mHeaderView.setTop(marginTop);
         LayoutParams params = (LayoutParams)mHeaderView.getLayoutParams();
         params.setMargins(params.leftMargin, marginTop, params.rightMargin,
             params.bottomMargin);
@@ -77,35 +77,39 @@ public class XRecyclerView extends RecyclerView {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        switch (e.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                Logger.d("onTouchEvent---ACTION_DOWN");
-                mLastMotionX = e.getX();
-                mLastMotionY = e.getY();
+        Logger.d("getChildAt(0):" + getChildAt(0));
+        if (mHeaderView == getChildAt(0)) {
+            switch (e.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    Logger.d("onTouchEvent---ACTION_DOWN");
+                    mLastMotionX = e.getX();
+                    mLastMotionY = e.getY();
 
-                mIsBeingDragged = false;
+                    //mIsBeingDragged = false;
 
-                break;
-            case MotionEvent.ACTION_MOVE:
-                Logger.d("onTouchEvent---ACTION_MOVE");
-                float offsetX = Math.abs(e.getX() - mLastMotionX);
-                float offsetY = Math.abs(e.getY() - mLastMotionY);
-                if (offsetY > offsetX && offsetY >= mTouchSlop) {
-                    //表示是上下滑动,拦截事件交给OnTouchEvent事件处理
-                    mIsBeingDragged = true;
-                    Logger.d("上下滑动:");
-                    return true;
-                }
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    Logger.d("onTouchEvent---ACTION_MOVE");
+                    float offsetX = Math.abs(e.getX() - mLastMotionX);
+                    float offsetY = Math.abs(e.getY() - mLastMotionY);
+                    if (offsetY > offsetX && offsetY >= mTouchSlop) {
+                        //表示是上下滑动,拦截事件交给OnTouchEvent事件处理
+                        mIsBeingDragged = true;
+                        Logger.d("上下滑动:");
+                        updateHeaderMargin(-mHeaderMeasureHeight + (int)offsetY);
+                        return true;
+                    }
 
-                break;
-            case MotionEvent.ACTION_UP:
-                Logger.d("onTouchEvent---ACTION_UP");
+                    break;
+                case MotionEvent.ACTION_UP:
+                    Logger.d("onTouchEvent---ACTION_UP");
 
-                break;
-            default:
-                break;
+                    break;
+                default:
+                    break;
+            }
         }
-        return mIsBeingDragged;
+        return super.onTouchEvent(e);
     }
 
     @Override
