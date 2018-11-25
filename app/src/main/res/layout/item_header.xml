@@ -6,14 +6,14 @@
     android:background="@color/colorAccent">
 
     <TextView
-        android:visibility="visible"
         android:id="@+id/tv_pulldownrefresh"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:gravity="center"
         android:textAllCaps="false"
         android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:visibility="visible"/>
 
     <LinearLayout
         android:id="@+id/ll_refreshing"
@@ -34,6 +34,8 @@
             android:paddingLeft="20dp"
             android:text="刷新中..."
 
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:textStyle="bold"
+            />
     </LinearLayout>
 </FrameLayout>

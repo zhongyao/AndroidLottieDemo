@@ -96,9 +96,9 @@ public class XRecyclerView extends RecyclerView {
                     break;
                 case MotionEvent.ACTION_MOVE:
                     //Logger.d("onTouchEvent---ACTION_MOVE");
-                    float offsetX = Math.abs(e.getX() - mLastMotionX);
-                    float offsetY = Math.abs(e.getY() - mLastMotionY);
-                    if (offsetY > offsetX && offsetY >= mTouchSlop) {
+                    float offsetX = e.getX() - mLastMotionX;
+                    float offsetY = e.getY() - mLastMotionY;
+                    if (Math.abs(offsetY) > Math.abs(offsetX) && offsetY >= mTouchSlop) {
                         //表示是上下滑动,拦截事件交给OnTouchEvent事件处理
                         mIsBeingDragged = true;
                         if (offsetY <= mMaxVisibleHeight) {
