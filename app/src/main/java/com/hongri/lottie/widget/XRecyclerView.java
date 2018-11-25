@@ -8,6 +8,11 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import com.hongri.lottie.R;
+import com.hongri.lottie.bean.RefreshState;
+import com.hongri.lottie.holder.HeaderHolder;
 import com.hongri.lottie.util.Logger;
 
 /**
@@ -24,6 +29,7 @@ public class XRecyclerView extends RecyclerView {
     private float mLastMotionX, mLastMotionY;
     private int mTouchSlop;
     private boolean mIsBeingDragged = false;
+    private float mMaxVisibleHeight = 350;
 
     public XRecyclerView(Context context,
                          @Nullable AttributeSet attrs) {
@@ -53,9 +59,9 @@ public class XRecyclerView extends RecyclerView {
     @Override
     public void onScrollStateChanged(int state) {
         super.onScrollStateChanged(state);
-        Logger.d("state:" + state + "getChildAt(0):" + getChildAt(0));
         if (state == RecyclerView.SCROLL_STATE_SETTLING && mHeaderView == getChildAt(0)) {
-            updateHeaderMargin(-mHeaderMeasureHeight);
+            Logger.d("state:" + state + "getChildAt(0):" + getChildAt(0));
+            //updateHeaderMargin(-mHeaderMeasureHeight);
         }
     }
 
@@ -77,11 +83,11 @@ public class XRecyclerView extends RecyclerView {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        Logger.d("getChildAt(0):" + getChildAt(0));
         if (mHeaderView == getChildAt(0)) {
+            //Logger.d("getChildAt(0):is mHeaderView" + true);
             switch (e.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    Logger.d("onTouchEvent---ACTION_DOWN");
+                    //Logger.d("onTouchEvent---ACTION_DOWN");
                     mLastMotionX = e.getX();
                     mLastMotionY = e.getY();
 
@@ -89,27 +95,78 @@ public class XRecyclerView extends RecyclerView {
 
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    Logger.d("onTouchEvent---ACTION_MOVE");
+                    //Logger.d("onTouchEvent---ACTION_MOVE");
                     float offsetX = Math.abs(e.getX() - mLastMotionX);
                     float offsetY = Math.abs(e.getY() - mLastMotionY);
                     if (offsetY > offsetX && offsetY >= mTouchSlop) {
                         //表示是上下滑动,拦截事件交给OnTouchEvent事件处理
                         mIsBeingDragged = true;
-                        Logger.d("上下滑动:");
-                        updateHeaderMargin(-mHeaderMeasureHeight + (int)offsetY);
+                        if (offsetY <= mMaxVisibleHeight) {
+                            //如果下拉的高度小于最大的下拉高度
+                            if (offsetY < mHeaderMeasureHeight) {
+                                setRefreshState(RefreshState.PULL_TO_REFRESH);
+                            } else {
+                                setRefreshState(RefreshState.RELEASE_TO_REFRESH);
+                            }
+                            updateHeaderMargin(-mHeaderMeasureHeight + (int)offsetY);
+                        }
                         return true;
                     }
 
                     break;
                 case MotionEvent.ACTION_UP:
+                    updateHeaderMargin(0);
+                    setRefreshState(RefreshState.REFRESHING);
                     Logger.d("onTouchEvent---ACTION_UP");
 
                     break;
                 default:
                     break;
             }
+        } else {
+            //Logger.d("getChildAt(0):is mHeaderView" + false);
         }
         return super.onTouchEvent(e);
+    }
+
+    private void setRefreshState(int state) {
+
+        View view = getChildAt(0);
+        TextView mPullDownRefreshTv = null;
+        LinearLayout mRefreshing = null;
+        if (getChildViewHolder(view) instanceof HeaderHolder) {
+            mPullDownRefreshTv = (TextView)view.findViewById(R.id.tv_pulldownrefresh);
+            mRefreshing = (LinearLayout)view.findViewById(R.id.ll_refreshing);
+        }
+
+        switch (state) {
+            case RefreshState.PULL_TO_REFRESH:
+                mRefreshing.setVisibility(INVISIBLE);
+                mPullDownRefreshTv.setVisibility(VISIBLE);
+                mPullDownRefreshTv.setText("下拉刷新");
+
+                Logger.d("PULL_TO_REFRESH");
+                break;
+            case RefreshState.RELEASE_TO_REFRESH:
+                mRefreshing.setVisibility(INVISIBLE);
+                mPullDownRefreshTv.setVisibility(VISIBLE);
+                mPullDownRefreshTv.setText("松开刷新");
+
+                Logger.d("RELEASE_TO_REFRESH");
+                break;
+            case RefreshState.REFRESHING:
+                mRefreshing.setVisibility(VISIBLE);
+                mPullDownRefreshTv.setVisibility(INVISIBLE);
+                Logger.d("REFRESHING");
+                break;
+            case RefreshState.RESET:
+                mRefreshing.setVisibility(INVISIBLE);
+                mPullDownRefreshTv.setVisibility(INVISIBLE);
+                Logger.d("RESET");
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

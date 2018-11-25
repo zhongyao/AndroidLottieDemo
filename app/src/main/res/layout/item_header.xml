@@ -7,7 +7,7 @@
 
     <TextView
         android:visibility="visible"
-        android:id="@+id/tv_refresh"
+        android:id="@+id/tv_pulldownrefresh"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:gravity="center"
@@ -25,13 +25,15 @@
 
         <ProgressBar
             android:layout_width="30dp"
-            android:layout_height="30dp"/>
+            android:layout_height="30dp"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
             android:text="刷新中..."
-            android:textSize="15sp"/>
+
+            android:textSize="18sp"/>
     </LinearLayout>
 </FrameLayout>

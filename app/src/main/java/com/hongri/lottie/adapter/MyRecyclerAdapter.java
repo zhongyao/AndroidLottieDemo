@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import com.hongri.lottie.R;
 import com.hongri.lottie.holder.FooterHolder;
 import com.hongri.lottie.holder.HeaderHolder;
@@ -26,6 +28,8 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter {
     private NormalAdapter mNormalAdapter;
     private View mHeaderView;
     private View mFooterView;
+    private TextView mRefreshTitle;
+    private ImageView mRefreshIcon;
 
     public MyRecyclerAdapter(Context context, NormalAdapter normalAdapter, View headerView,
                              View footerView) {
@@ -34,6 +38,11 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter {
         mHeaderView = headerView;
         mFooterView = footerView;
     }
+
+    //public void setHeaderData(HeaderItem headerItem){
+    //    mRefreshTitle = headerItem.getRefreshTitle();
+    //    mRefreshIcon = headerItem.getRefreshIcon()
+    //}
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

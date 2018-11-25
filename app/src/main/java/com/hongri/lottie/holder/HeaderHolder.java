@@ -16,6 +16,6 @@ public class HeaderHolder extends RecyclerView.ViewHolder {
 
     public HeaderHolder(View itemView) {
         super(itemView);
-        tvRefresh = (TextView)itemView.findViewById(R.id.tv_refresh);
+        tvRefresh = (TextView)itemView.findViewById(R.id.tv_pulldownrefresh);
     }
 }
