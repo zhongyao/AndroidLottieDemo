@@ -157,16 +157,32 @@ public class XRecyclerView extends RecyclerView {
             case RefreshState.REFRESHING:
                 mRefreshing.setVisibility(VISIBLE);
                 mPullDownRefreshTv.setVisibility(INVISIBLE);
+
+                requestData();
                 Logger.d("REFRESHING");
                 break;
             case RefreshState.RESET:
                 mRefreshing.setVisibility(INVISIBLE);
                 mPullDownRefreshTv.setVisibility(INVISIBLE);
+
+                updateHeaderMargin(-mHeaderMeasureHeight);
                 Logger.d("RESET");
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 请求网络数据(模拟)
+     */
+    private void requestData() {
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setRefreshState(RefreshState.RESET);
+            }
+        }, 3000);
     }
 
     @Override
