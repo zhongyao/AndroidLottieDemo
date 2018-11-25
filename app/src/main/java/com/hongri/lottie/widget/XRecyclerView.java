@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.hongri.lottie.R;
@@ -51,7 +52,7 @@ public class XRecyclerView extends RecyclerView {
             if (mHeaderMeasureHeight == 0) {
                 mHeaderMeasureHeight = mHeaderView.getMeasuredHeight();
             }
-            updateHeaderMargin(-mHeaderMeasureHeight);
+            updateHeaderMargin(0, -mHeaderMeasureHeight, false);
             isFirstComeIn = false;
         }
     }
@@ -65,14 +66,6 @@ public class XRecyclerView extends RecyclerView {
         }
     }
 
-    private void updateHeaderMargin(int marginTop) {
-        mHeaderView.setTop(marginTop);
-        LayoutParams params = (LayoutParams)mHeaderView.getLayoutParams();
-        params.setMargins(params.leftMargin, marginTop, params.rightMargin,
-            params.bottomMargin);
-        mHeaderView.setLayoutParams(params);
-    }
-
     /**
      * 1、首先判断列表是否滑动到了顶部
      * 2、当列表在顶部时向下拉动，则触发Touch事件
@@ -84,7 +77,6 @@ public class XRecyclerView extends RecyclerView {
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         if (mHeaderView == getChildAt(0)) {
-            //Logger.d("getChildAt(0):is mHeaderView" + true);
             switch (e.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     //Logger.d("onTouchEvent---ACTION_DOWN");
@@ -108,14 +100,14 @@ public class XRecyclerView extends RecyclerView {
                             } else {
                                 setRefreshState(RefreshState.RELEASE_TO_REFRESH);
                             }
-                            updateHeaderMargin(-mHeaderMeasureHeight + (int)offsetY);
+                            updateHeaderMargin(-mHeaderMeasureHeight, -mHeaderMeasureHeight + (int)offsetY, false);
                         }
                         return true;
                     }
 
                     break;
                 case MotionEvent.ACTION_UP:
-                    updateHeaderMargin(0);
+                    updateHeaderMargin((int)mMaxVisibleHeight - mHeaderMeasureHeight, 0, false);
                     setRefreshState(RefreshState.REFRESHING);
                     Logger.d("onTouchEvent---ACTION_UP");
 
@@ -163,13 +155,64 @@ public class XRecyclerView extends RecyclerView {
                 break;
             case RefreshState.RESET:
                 mRefreshing.setVisibility(INVISIBLE);
-                mPullDownRefreshTv.setVisibility(INVISIBLE);
+                mPullDownRefreshTv.setVisibility(VISIBLE);
+                mPullDownRefreshTv.setText("刷新成功");
 
-                updateHeaderMargin(-mHeaderMeasureHeight);
+                updateHeaderMargin(0, -mHeaderMeasureHeight, true);
                 Logger.d("RESET");
                 break;
             default:
                 break;
+        }
+    }
+
+    private SmoothScrollRunnable mSmoothScrollRunnable;
+    private LinearInterpolator mLinearInterpolator;
+    private final float SMOOTH_SCROLL_TIME = 400;
+
+    private void updateHeaderMargin(int fromY, int toY, boolean smoothScroll) {
+
+        //post()
+        mSmoothScrollRunnable = new SmoothScrollRunnable(fromY, toY, smoothScroll);
+        post(mSmoothScrollRunnable);
+    }
+
+    private class SmoothScrollRunnable implements Runnable {
+
+        private int mToY;
+        private boolean mSmoothScroll;
+        private int mFromY;
+        private long mStartTime = -1;
+
+        public SmoothScrollRunnable(int fromY, int toY, boolean smoothScroll) {
+            mFromY = fromY;
+            mToY = toY;
+            mSmoothScroll = smoothScroll;
+            mLinearInterpolator = new LinearInterpolator();
+        }
+
+        @Override
+        public void run() {
+            float deltaY;
+            if (mSmoothScroll) {
+                if (mStartTime == -1) {
+                    mStartTime = System.currentTimeMillis();
+                }
+
+                float normalizedTime = Math.min(System.currentTimeMillis() - mStartTime, SMOOTH_SCROLL_TIME);
+                deltaY = (mToY - mFromY) * mLinearInterpolator.getInterpolation(normalizedTime / SMOOTH_SCROLL_TIME);
+                post(SmoothScrollRunnable.this);
+                if (normalizedTime == SMOOTH_SCROLL_TIME) {
+                    removeCallbacks(SmoothScrollRunnable.this);
+                }
+            } else {
+                deltaY = mToY;
+            }
+            mHeaderView.setTop((int)deltaY);
+            LayoutParams params = (LayoutParams)mHeaderView.getLayoutParams();
+            params.setMargins(params.leftMargin, (int)deltaY, params.rightMargin,
+                params.bottomMargin);
+            mHeaderView.setLayoutParams(params);
         }
     }
 
