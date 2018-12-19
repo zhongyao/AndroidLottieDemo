@@ -1,12 +1,10 @@
 package com.hongri.lottie;
 
 import android.graphics.Color;
-import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -37,7 +35,8 @@ public class LayoutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_layout);
+        setContentView(R.layout.activity_linearlayout);
+        //setContentView(R.layout.activity_layout);
 
         /**
          * 原来icon是个黑色订阅图片，color设置为red
@@ -59,7 +58,7 @@ public class LayoutActivity extends AppCompatActivity {
 
          链接：https://www.jianshu.com/p/9cae2250d0ed
          */
-        iv = (ImageView)findViewById(R.id.iv);
+        //iv = (ImageView)findViewById(R.id.iv);
         //1、CLEAR 透明
         //iv.setColorFilter(ContextCompat.getColor(this,R.color.color_red), Mode.CLEAR);
         //2、SRC 全红
@@ -83,8 +82,8 @@ public class LayoutActivity extends AppCompatActivity {
         //11、DST_ATOP
         //iv.setColorFilter(ContextCompat.getColor(this,R.color.color_red), Mode.DST_ATOP);
         //12、XOR
-        iv.setColorFilter(ContextCompat.getColor(this,R.color.color_red), Mode.XOR);
-        iv.setImageResource(R.drawable.add_item);
+        //iv.setColorFilter(ContextCompat.getColor(this,R.color.color_red), Mode.XOR);
+        //iv.setImageResource(R.drawable.add_item);
 
         /**
          * 根布局

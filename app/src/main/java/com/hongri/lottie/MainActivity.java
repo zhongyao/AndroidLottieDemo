@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
          * 添加颜色过滤器（包含整个动画、一个特定图层、图层上的特定内容）
          */
         animationView5.setAnimation(ROLLING_LOTTIE_JSON);
-        animationView5.loop(true);
+        //animationView5.loop(true);
 
         //任何符合颜色过滤界面的类
         final PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(Color.RED, Mode.LIGHTEN);

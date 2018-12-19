@@ -69,7 +69,6 @@
         android:layout_marginBottom="2dp"
         android:background="#ddff00"
         app:lottie_autoPlay="false"
-        app:lottie_loop="true"
         app:lottie_scale="1.0"/>
 
 </LinearLayout>
