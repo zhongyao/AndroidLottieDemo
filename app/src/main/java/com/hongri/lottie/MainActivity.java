@@ -25,6 +25,18 @@ import org.json.JSONObject;
 
 /**
  * @author hongri
+ * 参考：
+ * https://juejin.im/entry/58a324d12f301e00695da316
+ * Lottie动画的实现原理：
+ * json--->Component--->Drawable--->View
+ * 核心类如下：
+ * LottieComposition
+ * LottieDrawable
+ * LottieAnimationView
+ * 1、解析json文件
+ * 2、建立数据到对象的映射
+ * 3、根据数据对象创建合适的Drawable绘制到View上
+ *
  */
 public class MainActivity extends AppCompatActivity {
 
