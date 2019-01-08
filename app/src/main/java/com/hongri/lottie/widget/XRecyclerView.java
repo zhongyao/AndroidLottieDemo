@@ -9,8 +9,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.LinearInterpolator;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.airbnb.lottie.LottieAnimationView;
+import com.hongri.lottie.MainActivity;
 import com.hongri.lottie.R;
 import com.hongri.lottie.bean.RefreshState;
 import com.hongri.lottie.holder.HeaderHolder;
@@ -30,7 +31,8 @@ public class XRecyclerView extends RecyclerView {
     private float mLastMotionX, mLastMotionY;
     private int mTouchSlop;
     private boolean mIsBeingDragged = false;
-    private float mMaxVisibleHeight = 350;
+    private float mMaxVisibleHeight = 450;
+    private LottieAnimationView mLottieView;
 
     public XRecyclerView(Context context,
                          @Nullable AttributeSet attrs) {
@@ -93,8 +95,9 @@ public class XRecyclerView extends RecyclerView {
                     if (Math.abs(offsetY) > Math.abs(offsetX) && offsetY >= mTouchSlop) {
                         //表示是上下滑动,拦截事件交给OnTouchEvent事件处理
                         mIsBeingDragged = true;
+                        //如果下拉的高度小于最大的下拉高度
                         if (offsetY <= mMaxVisibleHeight) {
-                            //如果下拉的高度小于最大的下拉高度
+                            //如果下拉的高度小于刷新区域的高度
                             if (offsetY < mHeaderMeasureHeight) {
                                 setRefreshState(RefreshState.PULL_TO_REFRESH);
                             } else {
@@ -121,40 +124,41 @@ public class XRecyclerView extends RecyclerView {
         return super.onTouchEvent(e);
     }
 
+
     private void setRefreshState(int state) {
 
         View view = getChildAt(0);
         TextView mPullDownRefreshTv = null;
-        LinearLayout mRefreshing = null;
         if (getChildViewHolder(view) instanceof HeaderHolder) {
             mPullDownRefreshTv = (TextView)view.findViewById(R.id.tv_pulldownrefresh);
-            mRefreshing = (LinearLayout)view.findViewById(R.id.ll_refreshing);
+            mLottieView = (LottieAnimationView)view.findViewById(R.id.lottieView);
+            mLottieView.setAnimation(MainActivity.PULLDOWN_LOTTIE_JSON);
         }
 
         switch (state) {
             case RefreshState.PULL_TO_REFRESH:
-                mRefreshing.setVisibility(INVISIBLE);
                 mPullDownRefreshTv.setVisibility(VISIBLE);
                 mPullDownRefreshTv.setText("下拉刷新");
+                //mLottieView.playAnimation();
+                //mLottieView.setProgress();
+                //updateProgress();
 
                 Logger.d("PULL_TO_REFRESH");
                 break;
             case RefreshState.RELEASE_TO_REFRESH:
-                mRefreshing.setVisibility(INVISIBLE);
                 mPullDownRefreshTv.setVisibility(VISIBLE);
                 mPullDownRefreshTv.setText("松开刷新");
 
                 Logger.d("RELEASE_TO_REFRESH");
                 break;
             case RefreshState.REFRESHING:
-                mRefreshing.setVisibility(VISIBLE);
-                mPullDownRefreshTv.setVisibility(INVISIBLE);
+                mPullDownRefreshTv.setVisibility(VISIBLE);
+                mPullDownRefreshTv.setText("刷新中...");
 
                 requestData();
                 Logger.d("REFRESHING");
                 break;
             case RefreshState.RESET:
-                mRefreshing.setVisibility(INVISIBLE);
                 mPullDownRefreshTv.setVisibility(VISIBLE);
                 mPullDownRefreshTv.setText("刷新成功");
 
@@ -209,6 +213,9 @@ public class XRecyclerView extends RecyclerView {
                 deltaY = mToY;
             }
             mHeaderView.setTop((int)deltaY);
+            if (mLottieView != null){
+                mLottieView.setProgress(Math.abs(deltaY)/mHeaderMeasureHeight);
+            }
             LayoutParams params = (LayoutParams)mHeaderView.getLayoutParams();
             params.setMargins(params.leftMargin, (int)deltaY, params.rightMargin,
                 params.bottomMargin);

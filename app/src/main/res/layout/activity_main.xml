@@ -70,5 +70,24 @@
         android:background="#ddff00"
         app:lottie_autoPlay="false"
         app:lottie_scale="1.0"/>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view6"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="2dp"
+        android:background="#ddff00"
+        app:lottie_autoPlay="true"
+        app:lottie_scale="1.0"/>
+
+    <!--直接将Lottie文件放置raw文件夹下，然后引入-->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view7"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="2dp"
+        android:background="#ddff00"
+        app:lottie_rawRes = "@raw/snake_loader"
+        app:lottie_autoPlay="true"
+        app:lottie_scale="1.0"/>
 
 </LinearLayout>
