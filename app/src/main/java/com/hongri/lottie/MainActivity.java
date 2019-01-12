@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
          * Lottie可以通过ValueAnimator动态的设置动画值从0.0f到1.0f来实现动画的变化
          */
         animationView.setAnimation(PULLDOWN_LOTTIE_JSON);
+        animationView.setProgress(0.0f);
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 1.0f).setDuration(5000);
         animator.addUpdateListener(new AnimatorUpdateListener() {
             @Override
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        animator.start();
+        //animator.start();
 
         /**
          * 示例2:
@@ -129,10 +130,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 animationView2.loop(false);
+                //Logger.d("yao"+animation.getAnimatedValue()+"");
                 animationView2.setProgress((Float)animation.getAnimatedValue());
                 if ((float)animation.getAnimatedValue() == 1.0f) {
+                    ////animationView2.setProgress(0.0f);
+                    //animationView2.loop(true);
+                    //animationView2.setAnimation(ROLLING_LOTTIE_JSON);
+                    ////animationView2.setScale((float)1.0);
+                    //animationView2.playAnimation();
+
                     animationView2.setAnimation(ROLLING_LOTTIE_JSON);
-                    animationView2.setProgress(1.0f);
+
+
+                    //Drawable drawable = animationView2.getDrawable();
+                    //animationView2.setImageDrawable(drawable);
+                    //animationView2.getDrawable().setColorFilter(ContextCompat.getColor(MainActivity.this, R.color.color_blue), Mode.SRC_ATOP);
+                    //任何符合颜色过滤界面的类
+                    final PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(Color.BLUE, Mode.SRC_IN);
+                    animationView2.addColorFilter(colorFilter);
                     animationView2.loop(true);
                     animationView2.playAnimation();
                 }
@@ -197,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
         final PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(Color.RED, Mode.LIGHTEN);
         //在整个视图中添加一个颜色过滤器
         //animationView5.addColorFilter(colorFilter);
-        animationView5.setColorFilter(colorFilter);
+        animationView5.addColorFilter(colorFilter);
         animationView5.playAnimation();
 
         /**

@@ -20,7 +20,9 @@ android {
 
 dependencies {
     /*compile 'com.airbnb.android:lottie:2.1.0'*/
-    compile 'com.airbnb.android:lottie:2.3.0'
+    compile ('com.airbnb.android:lottie:2.3.0'){
+        transitive = true
+    }
 //    compile "com.airbnb.android:2.1.0"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
