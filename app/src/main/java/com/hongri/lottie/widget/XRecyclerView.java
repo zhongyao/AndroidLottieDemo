@@ -26,13 +26,27 @@ public class XRecyclerView extends RecyclerView {
     private View mHeaderView;
     private View mFooterView;
     private boolean isFirstComeIn = true;
+    /**
+     * 刷新区域高度
+     */
     private int mHeaderMeasureHeight;
     private boolean isBeingDraged = false;
     private float mLastMotionX, mLastMotionY;
     private int mTouchSlop;
     private boolean mIsBeingDragged = false;
+    /**
+     * 最大下拉高度
+     */
     private float mMaxVisibleHeight = 450;
     private LottieAnimationView mLottieView;
+    /**
+     * 下拉的进度：if当先下拉的高度==刷新区域的高度，then progress == 1.0f
+     */
+    private float progress;
+    /**
+     * 当下下拉的高度
+     */
+    private float mHeaderScrollY;
 
     public XRecyclerView(Context context,
                          @Nullable AttributeSet attrs) {
@@ -89,78 +103,92 @@ public class XRecyclerView extends RecyclerView {
 
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    //Logger.d("onTouchEvent---ACTION_MOVE");
                     float offsetX = e.getX() - mLastMotionX;
-                    float offsetY = e.getY() - mLastMotionY;
-                    if (Math.abs(offsetY) > Math.abs(offsetX) && offsetY >= mTouchSlop) {
-                        //表示是上下滑动,拦截事件交给OnTouchEvent事件处理
+                    mHeaderScrollY = e.getY() - mLastMotionY;
+                    //表示是上下滑动,拦截事件交给OnTouchEvent事件处理
+                    if (Math.abs(mHeaderScrollY) > Math.abs(offsetX) && mHeaderScrollY >= mTouchSlop) {
                         mIsBeingDragged = true;
                         //如果下拉的高度小于最大的下拉高度
-                        if (offsetY <= mMaxVisibleHeight) {
+                        if (mHeaderScrollY <= mMaxVisibleHeight) {
+                            int fromY = -mHeaderMeasureHeight;
+                            int toY = -mHeaderMeasureHeight + (int)mHeaderScrollY;
+                            progress = Math.abs(mHeaderScrollY) / Math.abs(fromY);
+                            Logger.d("progress:" + progress);
+                            updateHeaderMargin(fromY, toY, false);
+                            //updateProgress(progress);
                             //如果下拉的高度小于刷新区域的高度
-                            if (offsetY < mHeaderMeasureHeight) {
-                                setRefreshState(RefreshState.PULL_TO_REFRESH);
+                            if (mHeaderScrollY <= mHeaderMeasureHeight) {
+                                setRefreshState(RefreshState.PULL_TO_REFRESH, progress);
                             } else {
-                                setRefreshState(RefreshState.RELEASE_TO_REFRESH);
+                                //如果下拉的高度刷新区域的高度
+                                setRefreshState(RefreshState.RELEASE_TO_REFRESH, progress);
                             }
-                            updateHeaderMargin(-mHeaderMeasureHeight, -mHeaderMeasureHeight + (int)offsetY, false);
                         }
                         return true;
                     }
 
                     break;
                 case MotionEvent.ACTION_UP:
-                    updateHeaderMargin((int)mMaxVisibleHeight - mHeaderMeasureHeight, 0, false);
-                    setRefreshState(RefreshState.REFRESHING);
+                    if (progress >= 1) {
+                        updateHeaderMargin((int)mHeaderScrollY - mHeaderMeasureHeight, 0, false);
+                        setRefreshState(RefreshState.REFRESHING, progress);
+                    } else {
+                        Logger.d("mHeaderScrollY:" + mHeaderScrollY);
+                        updateHeaderMargin((int)-mHeaderScrollY, -mHeaderMeasureHeight, false);
+                    }
+
                     Logger.d("onTouchEvent---ACTION_UP");
 
                     break;
                 default:
                     break;
             }
-        } else {
-            //Logger.d("getChildAt(0):is mHeaderView" + false);
         }
         return super.onTouchEvent(e);
     }
 
-
-    private void setRefreshState(int state) {
+    private void setRefreshState(int state, float progress) {
 
         View view = getChildAt(0);
         TextView mPullDownRefreshTv = null;
         if (getChildViewHolder(view) instanceof HeaderHolder) {
             mPullDownRefreshTv = (TextView)view.findViewById(R.id.tv_pulldownrefresh);
             mLottieView = (LottieAnimationView)view.findViewById(R.id.lottieView);
-            mLottieView.setAnimation(MainActivity.PULLDOWN_LOTTIE_JSON);
         }
 
         switch (state) {
             case RefreshState.PULL_TO_REFRESH:
                 mPullDownRefreshTv.setVisibility(VISIBLE);
                 mPullDownRefreshTv.setText("下拉刷新");
-                //mLottieView.playAnimation();
-                //mLottieView.setProgress();
-                //updateProgress();
-
+                mLottieView.setVisibility(VISIBLE);
+                mLottieView.setAnimation(MainActivity.PULLDOWN_LOTTIE_JSON);
+                mLottieView.loop(false);
+                mLottieView.setProgress(progress);
                 Logger.d("PULL_TO_REFRESH");
                 break;
             case RefreshState.RELEASE_TO_REFRESH:
                 mPullDownRefreshTv.setVisibility(VISIBLE);
                 mPullDownRefreshTv.setText("松开刷新");
-
+                mLottieView.setProgress(1.0f);
                 Logger.d("RELEASE_TO_REFRESH");
                 break;
             case RefreshState.REFRESHING:
                 mPullDownRefreshTv.setVisibility(VISIBLE);
+                mLottieView.setAnimation(MainActivity.ROLLING_LOTTIE_JSON);
+                mLottieView.loop(true);
+                mLottieView.playAnimation();
                 mPullDownRefreshTv.setText("刷新中...");
-
+                /**
+                 * 请求数据
+                 */
                 requestData();
                 Logger.d("REFRESHING");
                 break;
             case RefreshState.RESET:
                 mPullDownRefreshTv.setVisibility(VISIBLE);
                 mPullDownRefreshTv.setText("刷新成功");
+                mLottieView.cancelAnimation();
+                //mLottieView.setVisibility(INVISIBLE);
 
                 updateHeaderMargin(0, -mHeaderMeasureHeight, true);
                 Logger.d("RESET");
@@ -213,9 +241,6 @@ public class XRecyclerView extends RecyclerView {
                 deltaY = mToY;
             }
             mHeaderView.setTop((int)deltaY);
-            if (mLottieView != null){
-                mLottieView.setProgress(Math.abs(deltaY)/mHeaderMeasureHeight);
-            }
             LayoutParams params = (LayoutParams)mHeaderView.getLayoutParams();
             params.setMargins(params.leftMargin, (int)deltaY, params.rightMargin,
                 params.bottomMargin);
@@ -230,9 +255,9 @@ public class XRecyclerView extends RecyclerView {
         postDelayed(new Runnable() {
             @Override
             public void run() {
-                setRefreshState(RefreshState.RESET);
+                setRefreshState(RefreshState.RESET, 0);
             }
-        }, 3000);
+        }, 1500);
     }
 
     @Override

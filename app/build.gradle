@@ -20,7 +20,7 @@ android {
 
 dependencies {
     /*compile 'com.airbnb.android:lottie:2.1.0'*/
-    compile ('com.airbnb.android:lottie:2.3.0'){
+    compile ('com.airbnb.android:lottie:2.5.0'){
         transitive = true
     }
 //    compile "com.airbnb.android:2.1.0"

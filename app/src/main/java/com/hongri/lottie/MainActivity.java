@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                     //animationView2.getDrawable().setColorFilter(ContextCompat.getColor(MainActivity.this, R.color.color_blue), Mode.SRC_ATOP);
                     //任何符合颜色过滤界面的类
                     final PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(Color.BLUE, Mode.SRC_IN);
-                    animationView2.addColorFilter(colorFilter);
+                    //animationView2.addColorFilter(colorFilter);
                     animationView2.loop(true);
                     animationView2.playAnimation();
                 }
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        final Cancellable compositionCancellable = LottieComposition.Factory.fromJson(getResources(),jsonObject,
+        final Cancellable compositionCancellable = LottieComposition.Factory.fromJsonString(jsonObject.toString(),
             new OnCompositionLoadedListener() {
                 @Override
                 public void onCompositionLoaded(@Nullable LottieComposition composition) {
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
         final PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(Color.RED, Mode.LIGHTEN);
         //在整个视图中添加一个颜色过滤器
         //animationView5.addColorFilter(colorFilter);
-        animationView5.addColorFilter(colorFilter);
+        //animationView5.addColorFilter(colorFilter);
         animationView5.playAnimation();
 
         /**
